@@ -9,14 +9,14 @@ Use the `eventernote` CLI as the source of truth for Eventernote data.
 
 ## Workflow
 
-1. Check that the command exists:
+1. Check that the command exists and its version is `0.1.0`:
 
 ```sh
 command -v eventernote
-eventernote --help
+eventernote --version
 ```
 
-2. If the command is missing, run the requested query with `npx eventernote ...` instead. If `npx eventernote` also fails, stop and ask the user how they want to proceed.
+2. If the command is missing or its version is not `0.1.0`, run the requested query with `npx eventernote ...` instead. If `npx eventernote` fails or its version is also not `0.1.0`, stop and ask the user how they want to proceed.
 
 3. Choose the closest read-only query command for the user's request.
 
