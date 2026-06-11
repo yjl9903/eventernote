@@ -1,7 +1,7 @@
 {
   "name": "eventernote",
-  "version": "0.0.0",
-  "description": "Eventernote CLI",
+  "version": "0.0.1",
+  "description": "Eventernote https://www.eventernote.com CLI, used for querying actor, event, or place information.",
   "keywords": [
     "eventernote",
     "cli"

@@ -4,7 +4,7 @@
 [![version](https://img.shields.io/npm/v/eventernote?label=eventernote)](https://www.npmjs.com/package/eventernote)
 [![CI](https://github.com/yjl9903/eventernote/actions/workflows/ci.yml/badge.svg)](https://github.com/yjl9903/eventernote/actions/workflows/ci.yml)
 
-Eventernote CLI.
+[Eventernote](https://www.eventernote.com) CLI and TypeScript library, used for querying Eventernote actor, event, or place information.
 
 ## Skill
 

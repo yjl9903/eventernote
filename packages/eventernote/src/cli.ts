@@ -1,14 +1,16 @@
 import { breadc } from 'breadc';
 
+import { version } from '../package.json';
+
 import { EventernoteClient, EventernoteError } from './client/index.js';
 import { formatDetail, formatList, jsonFail, type OutputMode } from './format.js';
 import { detectOutputMode, installOutputErrorHandlers, isEpipe, writeOutput } from './output.js';
-import { version, description } from '../package.json';
 
-export const app = breadc('eventernote', { version, description }).option(
-  '--json',
-  'Enable JSON output'
-);
+export const app = breadc('eventernote', {
+  version,
+  description:
+    'Eventernote https://www.eventernote.com CLI, used for querying actor, event, or place information.'
+}).option('--json', 'Output JSON format');
 
 installOutputErrorHandlers();
 
