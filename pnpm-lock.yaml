@@ -38,6 +38,8 @@ importers:
 
   packages/core: {}
 
+  packages/eventernote: {}
+
 packages:
 
   '@babel/generator@8.0.0-rc.6':
