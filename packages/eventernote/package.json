@@ -1,8 +1,11 @@
 {
   "name": "eventernote",
   "version": "0.0.0",
-  "description": "",
-  "keywords": [],
+  "description": "Eventernote CLI",
+  "keywords": [
+    "eventernote",
+    "cli"
+  ],
   "homepage": "https://github.com/yjl9903/eventernote#readme",
   "bugs": {
     "url": "https://github.com/yjl9903/eventernote/issues"
@@ -12,7 +15,7 @@
     "url": "git+https://github.com/yjl9903/eventernote.git"
   },
   "license": "MIT",
-  "author": "XLor",
+  "author": "OneKuma",
   "sideEffects": false,
   "type": "module",
   "exports": {
@@ -24,13 +27,20 @@
   "module": "dist/index.mjs",
   "types": "dist/index.d.mts",
   "files": [
-    "dist"
+    "src",
+    "dist",
+    "*.mjs"
   ],
   "scripts": {
     "build": "tsdown",
     "test": "vitest",
     "test:ci": "vitest --run",
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "breadc": "^1.0.0-beta.16",
+    "dotenv": "^17.4.2",
+    "jsdom": "^29.1.1"
   },
   "engines": {
     "node": ">=v24.0.0"

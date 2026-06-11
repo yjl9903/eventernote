@@ -1,3 +1,1 @@
-export function hello() {
-  return 'world';
-}
+export * from './client/index.js';
