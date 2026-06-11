@@ -1,0 +1,4 @@
+interface:
+  display_name: "Eventernote"
+  short_description: "Query Eventernote actor, event, and place data"
+  default_prompt: "Use $eventernote to query Eventernote actor, event, or place information."
