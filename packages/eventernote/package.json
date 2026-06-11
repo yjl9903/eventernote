@@ -26,6 +26,9 @@
   },
   "module": "dist/index.mjs",
   "types": "dist/index.d.mts",
+  "bin": {
+    "eventernote": "cli.mjs"
+  },
   "files": [
     "src",
     "dist",

@@ -1,5 +1,8 @@
 import { breadc } from 'breadc';
 
+import { EventernoteClient, EventernoteError } from './client/index.js';
+import { formatDetail, formatList, jsonFail, type OutputMode } from './format.js';
+import { detectOutputMode, installOutputErrorHandlers, isEpipe, writeOutput } from './output.js';
 import { version, description } from '../package.json';
 
 export const app = breadc('eventernote', { version, description }).option(
@@ -7,11 +10,46 @@ export const app = breadc('eventernote', { version, description }).option(
   'Enable JSON output'
 );
 
+installOutputErrorHandlers();
+
 const actor = app.group('actor');
 
-actor.command('list [keyword]', 'List actors').action(async () => {});
+actor
+  .command('list [keyword]', 'List actors')
+  .option('--popular', 'List popular actors')
+  .option('--new', 'List new actors')
+  .option('--page <page>', 'Page number')
+  .action(async (keyword, options) => {
+    const mode = detectOutputMode(Boolean(options.json));
+    const client = new EventernoteClient();
+    try {
+      const selected = [Boolean(keyword), options.popular, options.new].filter(Boolean).length;
+      if (selected > 1) {
+        throw new EventernoteError(
+          'invalid_argument',
+          '[keyword], --popular, and --new are mutually exclusive'
+        );
+      }
+      const data = options.popular
+        ? await client.listPopularActors({ page: options.page })
+        : options.new
+          ? await client.listNewActors({ page: options.page })
+          : await client.searchActors({ keyword, page: options.page });
+      await writeOutput(formatList('actor', data, mode));
+    } catch (error) {
+      await handleCommandError(error, mode);
+    }
+  });
 
-actor.command('get <id/name>', 'Get actor detail').action(async () => {});
+actor.command('get <id,name>', 'Get actor detail').action(async (idOrName, options) => {
+  const mode = detectOutputMode(Boolean(options.json));
+  const client = new EventernoteClient();
+  try {
+    await writeOutput(formatDetail('actor', await client.getActor(idOrName), mode));
+  } catch (error) {
+    await handleCommandError(error, mode);
+  }
+});
 
 const event = app.group('event');
 
@@ -20,21 +58,90 @@ event
   .option('--date <date>')
   .option('--region <region>')
   .option('--prefecture <prefecture>')
-  .option('--actor <actor id/name>')
-  .option('--place <place id/name>')
-  .action(async () => {});
+  .option('--actor <actor>')
+  .option('--place <place>')
+  .option('--page <page>', 'Page number')
+  .action(async (keyword, options) => {
+    const mode = detectOutputMode(Boolean(options.json));
+    const client = new EventernoteClient();
+    try {
+      await writeOutput(
+        formatList(
+          'event',
+          await client.listEvents({
+            keyword,
+            date: options.date,
+            region: options.region,
+            prefecture: options.prefecture,
+            actor: options.actor,
+            place: options.place,
+            page: options.page
+          }),
+          mode
+        )
+      );
+    } catch (error) {
+      await handleCommandError(error, mode);
+    }
+  });
 
-event.command('get <id/name>', 'Get event detail').action(async () => {});
+event.command('get <id,name>', 'Get event detail').action(async (idOrName, options) => {
+  const mode = detectOutputMode(Boolean(options.json));
+  const client = new EventernoteClient();
+  try {
+    await writeOutput(formatDetail('event', await client.getEvent(idOrName), mode));
+  } catch (error) {
+    await handleCommandError(error, mode);
+  }
+});
 
 const place = app.group('place');
 
 place
   .command('list [keyword]', 'List places')
   .option('--prefecture <prefecture>')
-  .action(async () => {});
+  .option('--page <page>', 'Page number')
+  .action(async (keyword, options) => {
+    const mode = detectOutputMode(Boolean(options.json));
+    const client = new EventernoteClient();
+    try {
+      await writeOutput(
+        formatList(
+          'place',
+          await client.searchPlaces({
+            keyword,
+            prefecture: options.prefecture,
+            page: options.page
+          }),
+          mode
+        )
+      );
+    } catch (error) {
+      await handleCommandError(error, mode);
+    }
+  });
 
-place.command('get <id/name>', 'Get place detail').action(async () => {});
+place.command('get <id,name>', 'Get place detail').action(async (idOrName, options) => {
+  const mode = detectOutputMode(Boolean(options.json));
+  const client = new EventernoteClient();
+  try {
+    await writeOutput(formatDetail('place', await client.getPlace(idOrName), mode));
+  } catch (error) {
+    await handleCommandError(error, mode);
+  }
+});
 
 await app.run(process.argv.slice(2)).catch((error) => {
   console.error(error);
+  process.exitCode = 1;
 });
+
+async function handleCommandError(error: unknown, mode: OutputMode): Promise<void> {
+  if (isEpipe(error)) {
+    process.exitCode = 0;
+    return;
+  }
+  process.exitCode = 1;
+  const message = error instanceof Error ? error.message : String(error);
+  await writeOutput(mode === 'json' ? jsonFail(error) : `${message}\n`);
+}
