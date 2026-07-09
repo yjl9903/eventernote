@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@types/jsdom": "^28.0.3",
-    "@types/node": "^25.9.4",
+    "@types/node": "^25.9.5",
     "bumpp": "latest",
     "prettier": "^3.9.4",
     "tsdown": "^0.22.3",
