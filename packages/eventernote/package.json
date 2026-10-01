@@ -41,7 +41,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "breadc": "^1.0.0-beta.19",
+    "breadc": "^1.0.0-beta.20",
     "dotenv": "^18.0.5",
     "jsdom": "^30.1.1"
   },
