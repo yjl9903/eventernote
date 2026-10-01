@@ -4,6 +4,10 @@ packages:
 allowBuilds:
   esbuild: true
 
+minimumReleaseAgeExclude:
+  - breadc
+  - '@breadc/*'
+
 shellEmulator: true
 ignoreWorkspaceRootCheck: true
 shamefullyHoist: true
